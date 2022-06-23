@@ -29,13 +29,16 @@ jobs:
         if: ${{ steps.project.outputs.deployment-enabled == 'true' }}
         uses: actions/setup-node@v1
         with:
-          node-version: v14.19.1
+          node-version: v18.x
 
       - name: Build Node assets
+
         env:
           CI: true
           SITE_URL: ${{ steps.project.outputs.site-url }}
-        run: npm install
+        run: |
+          npm install
+          npm run build
 
       - name: Deploy to IONOS
         if: ${{ steps.project.outputs.deployment-enabled == 'true' }}
@@ -45,4 +48,4 @@ jobs:
           branch-id: ${{ steps.project.outputs.branch-id }}
           service-host: api-eu.ionos.space
           api-key: ${{ secrets.IONOS_API_KEY }}
-          dist-folder: ./public
+          dist-folder: ./dist
